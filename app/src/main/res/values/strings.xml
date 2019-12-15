@@ -1,4 +1,10 @@
 <resources>
-    <string name="app_name">Old Sole</string>
-    <string name="phoneNumber">phone number</string>
+    <string name="app_name">Old Sold</string>
+    <string name="email">email</string>
+    <string name="password">password</string>
+    <string name="loginButton">Login</string>
+    <string name="registerUser">Register Now</string>
+    <string name="registerButton">Register</string>
+
+
 </resources>

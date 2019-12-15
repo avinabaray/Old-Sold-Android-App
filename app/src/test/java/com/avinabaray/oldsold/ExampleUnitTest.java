@@ -1,4 +1,4 @@
-package com.example.oldsole;
+package com.avinabaray.oldsold;
 
 import org.junit.Test;
 

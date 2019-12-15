@@ -1,4 +1,4 @@
-package com.example.oldsole;
+package com.avinabaray.oldsold;
 
 import android.content.Context;
 
@@ -22,6 +22,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("com.example.oldsole", appContext.getPackageName());
+        assertEquals("com.example.oldsold", appContext.getPackageName());
     }
 }
