@@ -18,19 +18,28 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class RegisterUser extends AppCompatActivity {
 
+    public static final String EMAIL = "email";
+    public static final String USER_ROLE = "userRole";
     private FirebaseAuth mAuth;
 
     private EditText editTextEmail;
     private EditText editTextPassword;
-    private Switch switchUserMode;
+    private Switch switchUserRole;
     private String stringEmail;
     private String stringPassword;
-    private String userMode = "Customer";
+    private String userRole = "Customer";
 
     private AlertDialog.Builder alertBuilderRegisterUser;
+    private CollectionReference mDocRef = FirebaseFirestore.getInstance().collection("users");
     CommonMethods commonMethods = new CommonMethods();
 
     @Override
@@ -40,15 +49,15 @@ public class RegisterUser extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         alertBuilderRegisterUser = new AlertDialog.Builder(RegisterUser.this);
-        switchUserMode = findViewById(R.id.switchUserMode);
+        switchUserRole = findViewById(R.id.switchUserRole);
 
-        switchUserMode.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        switchUserRole.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isSeller) {
                 if(isSeller)
-                    userMode = "Seller";
+                    userRole = "Seller";
                 else
-                    userMode = "Customer";
+                    userRole = "Customer";
             }
         });
     }
@@ -75,6 +84,23 @@ public class RegisterUser extends AppCompatActivity {
                     Toast.makeText(RegisterUser.this, "Registration failed", Toast.LENGTH_SHORT).show();
                     editTextEmail.setText("");
                     editTextPassword.setText("");
+                }
+            }
+        });
+
+        // Data to be pushed to Firestore
+
+        Map<String, Object> userData = new HashMap<String, Object>();
+        userData.put(EMAIL, stringEmail);
+        userData.put(USER_ROLE, userRole);
+
+        mDocRef.add(userData).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentReference> task) {
+                if (task.isSuccessful()) {
+                    Log.i("STATUS", "User Data saved successfully.");
+                } else {
+                    Log.i("STATUS", task.getException().getMessage());
                 }
             }
         });

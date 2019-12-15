@@ -39,7 +39,7 @@
             android:textAlignment="textEnd" />
 
         <Switch
-            android:id="@+id/switchUserMode"
+            android:id="@+id/switchUserRole"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
