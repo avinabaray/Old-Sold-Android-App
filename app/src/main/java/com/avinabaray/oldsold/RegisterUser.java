@@ -8,7 +8,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -23,8 +25,10 @@ public class RegisterUser extends AppCompatActivity {
 
     private EditText editTextEmail;
     private EditText editTextPassword;
+    private Switch switchUserMode;
     private String stringEmail;
     private String stringPassword;
+    private String userMode = "Customer";
 
     private AlertDialog.Builder alertBuilderRegisterUser;
     CommonMethods commonMethods = new CommonMethods();
@@ -36,6 +40,17 @@ public class RegisterUser extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         alertBuilderRegisterUser = new AlertDialog.Builder(RegisterUser.this);
+        switchUserMode = findViewById(R.id.switchUserMode);
+
+        switchUserMode.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isSeller) {
+                if(isSeller)
+                    userMode = "Seller";
+                else
+                    userMode = "Customer";
+            }
+        });
     }
 
     public void register(View view) {
