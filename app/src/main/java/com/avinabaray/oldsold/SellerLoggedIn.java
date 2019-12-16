@@ -12,18 +12,18 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class SellerLoggedIn extends AppCompatActivity {
 
-    @Override
-    public void onBackPressed() {
-        // Uncomment the line below to enable BACK button
+        @Override
+        public void onBackPressed() {
+            // Uncomment the line below to enable BACK button
 //        super.onBackPressed();
-    }
+        }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.mymenu, menu);
+        @Override
+        public boolean onCreateOptionsMenu(Menu menu) {
+            getMenuInflater().inflate(R.menu.mymenu, menu);
 
-        return super.onCreateOptionsMenu(menu);
-    }
+            return super.onCreateOptionsMenu(menu);
+        }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
