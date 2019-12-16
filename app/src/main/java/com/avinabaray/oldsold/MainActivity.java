@@ -18,6 +18,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.Objects;
+
 public class MainActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
@@ -84,6 +86,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void updateUI(FirebaseUser user) {
         if (user != null) {
+            Log.wtf("CURRENT_USER", user.getDisplayName());
             Intent intentToCustomerLoggedIn = new Intent(this, CustomerLoggedIn.class);
             startActivity(intentToCustomerLoggedIn);
         } else {
