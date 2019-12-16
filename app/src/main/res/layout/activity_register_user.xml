@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:foregroundTint="#00BB3636"
     tools:context=".RegisterUser">
 
     <TextView
@@ -36,14 +37,18 @@
             android:layout_weight="1"
             android:paddingEnd="10dp"
             android:text="Customer"
-            android:textAlignment="textEnd" />
+            android:textAlignment="textEnd"
+            android:textColor="@color/customerSelector"
+            android:textStyle="bold" />
 
         <Switch
             android:id="@+id/switchUserRole"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:isScrollContainer="false" />
+            android:forceDarkAllowed="false"
+            android:isScrollContainer="false"
+            android:thumbTint="#673AB7" />
 
         <TextView
             android:id="@+id/textView6"
@@ -52,7 +57,9 @@
             android:layout_weight="1"
             android:paddingStart="10dp"
             android:text="Seller"
-            android:textAlignment="textStart" />
+            android:textAlignment="textStart"
+            android:textColor="@color/sellerSelector"
+            android:textStyle="bold" />
     </LinearLayout>
 
     <EditText
