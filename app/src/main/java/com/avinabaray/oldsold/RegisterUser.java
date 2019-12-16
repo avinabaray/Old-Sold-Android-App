@@ -46,6 +46,8 @@ public class RegisterUser extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_user);
+        editTextEmail = findViewById(R.id.editTextPhone);
+        editTextPassword = findViewById(R.id.editTextPassword);
 
         mAuth = FirebaseAuth.getInstance();
         alertBuilderRegisterUser = new AlertDialog.Builder(RegisterUser.this);
@@ -63,8 +65,6 @@ public class RegisterUser extends AppCompatActivity {
     }
 
     public void register(View view) {
-        editTextEmail = findViewById(R.id.editTextPhone);
-        editTextPassword = findViewById(R.id.editTextPassword);
         stringEmail = editTextEmail.getText().toString();
         stringPassword = editTextPassword.getText().toString();
 
@@ -78,32 +78,40 @@ public class RegisterUser extends AppCompatActivity {
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
                     FirebaseUser user = mAuth.getCurrentUser();
-                    Intent intentToCustomerLoggedIn = new Intent(RegisterUser.this, CustomerLoggedIn.class);
+                    Toast.makeText(RegisterUser.this, "Registration Successful", Toast.LENGTH_SHORT).show();
+
+                    // Data to be pushed to Firestore
+                    Map<String, Object> userData = new HashMap<String, Object>();
+                    userData.put(EMAIL, stringEmail);
+                    userData.put(USER_ROLE, userRole);
+
+                    mDocRef.add(userData).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentReference> task) {
+                            if (task.isSuccessful()) {
+                                Log.i("STATUS", "User Data saved successfully.");
+                            } else {
+                                Log.i("STATUS", task.getException().getMessage());
+                            }
+                        }
+                    });
+
+                    Intent intentFromRegisterUser = new Intent(RegisterUser.this, MainActivity.class);
+                    startActivity(intentFromRegisterUser);
                 } else {
                     Log.i("ERROR", task.getException().getMessage());
-                    Toast.makeText(RegisterUser.this, "Registration failed", Toast.LENGTH_SHORT).show();
+                    String taskErrorMsg = task.getException().getMessage();
+                    if (taskErrorMsg == null) {
+                        taskErrorMsg = "Authentication Failed";
+                    }
+                    commonMethods.createAlert(alertBuilderRegisterUser, taskErrorMsg);
                     editTextEmail.setText("");
                     editTextPassword.setText("");
                 }
             }
         });
 
-        // Data to be pushed to Firestore
 
-        Map<String, Object> userData = new HashMap<String, Object>();
-        userData.put(EMAIL, stringEmail);
-        userData.put(USER_ROLE, userRole);
-
-        mDocRef.add(userData).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentReference> task) {
-                if (task.isSuccessful()) {
-                    Log.i("STATUS", "User Data saved successfully.");
-                } else {
-                    Log.i("STATUS", task.getException().getMessage());
-                }
-            }
-        });
 
     }
 }

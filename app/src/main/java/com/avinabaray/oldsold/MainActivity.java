@@ -52,14 +52,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        editTextEmail = findViewById(R.id.editTextPhone);
+        editTextPassword = findViewById(R.id.editTextPassword);
 
         mAuth = FirebaseAuth.getInstance();
         alertBuilderMainActivity = new AlertDialog.Builder(MainActivity.this);
     }
 
     public void login(View view){
-        editTextEmail = findViewById(R.id.editTextPhone);
-        editTextPassword = findViewById(R.id.editTextPassword);
         stringEmail = editTextEmail.getText().toString();
         stringPassword = editTextPassword.getText().toString();
 
