@@ -1,9 +1,13 @@
 package com.avinabaray.oldsold;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 
 public class CommonMethods {
+
+    ProgressDialog pd;
 
     public void createAlert(AlertDialog.Builder alertDialogBuilder, String msg) {
         alertDialogBuilder.setMessage(msg)
@@ -16,6 +20,16 @@ public class CommonMethods {
                 });
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
+    }
+
+    public void loadingDialogStart(Context context) {
+        pd = new ProgressDialog(context);
+        pd.setMessage("Loading...");
+        pd.show();
+    }
+
+    public void loadingDialogStop() {
+        pd.dismiss();
     }
 
 }
