@@ -28,6 +28,7 @@ import java.util.Objects;
 public class MainActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
+    public static FirebaseUser currentUser;
     public static String CURRENT_USER_EMAIL;
     public static String CURRENT_USER_ID;
     public static String CURRENT_USER_ROLE;
@@ -44,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        FirebaseUser currentUser = mAuth.getCurrentUser();
+        currentUser = mAuth.getCurrentUser();
         updateUI(currentUser);
     }
 
