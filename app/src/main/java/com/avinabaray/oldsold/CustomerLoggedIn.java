@@ -4,7 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
-public class CustomerLoggedIn extends AppCompatActivity {
+public class CustomerLoggedIn extends BaseActivity {
 
     @Override
     public void onBackPressed() {
