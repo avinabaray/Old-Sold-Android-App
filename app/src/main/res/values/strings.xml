@@ -3,7 +3,7 @@
     <string name="email">email</string>
     <string name="password">password</string>
     <string name="loginButton">Login</string>
-    <string name="registerUser">Register Now</string>
+    <string name="registerUser">New User? Register Now</string>
     <string name="registerButton">Register</string>
 
 

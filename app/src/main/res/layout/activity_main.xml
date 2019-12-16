@@ -80,6 +80,7 @@
         android:layout_marginTop="8dp"
         android:onClick="register"
         android:text="@string/registerUser"
+        android:textColor="@color/common_google_signin_btn_text_dark_focused"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button" />
