@@ -168,6 +168,8 @@ public class SellerLoggedIn extends BaseActivity implements AdapterView.OnItemSe
                         public void onComplete(@NonNull Task<DocumentReference> task) {
                             progressDialog.dismiss();
                             if (task.isSuccessful()) {
+                                editTextItemTitle.setText("");
+                                editTextItemDesc.setText("");
                                 commonMethods.createAlert(alertBuilder, "Item uploaded successfully!");
                             } else {
                                 String errorMsg = task.getException().getMessage() + " Try Again...";

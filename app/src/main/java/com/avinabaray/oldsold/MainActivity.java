@@ -60,6 +60,11 @@ public class MainActivity extends AppCompatActivity {
         alertBuilderMainActivity = new AlertDialog.Builder(MainActivity.this);
     }
 
+    @Override
+    public void onBackPressed() {
+//        super.onBackPressed();
+    }
+
     public void login(View view){
         stringEmail = editTextEmail.getText().toString();
         stringPassword = editTextPassword.getText().toString();
