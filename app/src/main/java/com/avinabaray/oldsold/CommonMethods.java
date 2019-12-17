@@ -24,8 +24,9 @@ public class CommonMethods {
 
     public void loadingDialogStart(Context context) {
         pd = new ProgressDialog(context);
-        pd.setMessage("Loading...");
+        pd.setMessage("Please wait...");
         pd.show();
+        pd.setCanceledOnTouchOutside(false);
     }
 
     public void loadingDialogStop() {
