@@ -133,6 +133,12 @@ public class SellerLoggedIn extends BaseActivity implements AdapterView.OnItemSe
 
         itemPhotoName = MainActivity.CURRENT_USER_ID + "_" + UUID.randomUUID().toString();
 
+        // Validating if all the fields are filled
+        if(itemTitle.isEmpty() || itemDesc.isEmpty()) {
+            commonMethods.createAlert(alertBuilder, "Please fill all the fields");
+            return;
+        }
+
         // Photo to be uploaded to Firebase Storage
         if(filePath != null)
         {
