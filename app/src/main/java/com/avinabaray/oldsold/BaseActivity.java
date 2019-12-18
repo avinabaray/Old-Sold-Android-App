@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -12,6 +13,9 @@ import android.widget.Toast;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class BaseActivity extends AppCompatActivity {
+
+    public SharedPreferences pref;
+    SharedPreferences.Editor editor;
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -22,11 +26,16 @@ public class BaseActivity extends AppCompatActivity {
                 break;
 
             case R.id.itemLogout:
+
+//                Toast.makeText(this, pref.getString("CURRENT_USER_ROLE",""), Toast.LENGTH_SHORT).show();
+
                 MainActivity.CURRENT_USER_EMAIL = null;
                 MainActivity.CURRENT_USER_ID = null;
                 MainActivity.CURRENT_USER_ROLE = null;
                 FirebaseAuth.getInstance().signOut();
                 MainActivity.currentUser = null;
+                editor.clear();
+                editor.commit();
 
                 Intent intentToMainActivity = new Intent(this, MainActivity.class);
                 startActivity(intentToMainActivity);
@@ -44,5 +53,9 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Initializing SharedPreferences
+        pref = getApplicationContext().getSharedPreferences("MyPref", MODE_PRIVATE);
+        editor = pref.edit();
     }
 }

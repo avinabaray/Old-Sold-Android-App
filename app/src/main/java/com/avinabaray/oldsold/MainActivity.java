@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -42,11 +43,32 @@ public class MainActivity extends AppCompatActivity {
     private CollectionReference mDocRef = FirebaseFirestore.getInstance().collection("users");
     CommonMethods commonMethods = new CommonMethods();
 
+    public SharedPreferences pref;
+    SharedPreferences.Editor editor;
+
     @Override
     protected void onStart() {
         super.onStart();
-        currentUser = mAuth.getCurrentUser();
-        updateUI(currentUser);
+
+        // Retrieve SharePReference data
+        CURRENT_USER_ID = pref.getString("CURRENT_USER_ID", "");
+        CURRENT_USER_ROLE = pref.getString("CURRENT_USER_ROLE", "");
+
+        if (CURRENT_USER_ID.isEmpty()) {
+            currentUser = mAuth.getCurrentUser();
+            updateUI(currentUser);
+        } else {
+            Log.wtf("ID", CURRENT_USER_ID);
+            // Intents start
+            Intent intentFromMainActivity;
+            if (CURRENT_USER_ROLE.equals("Customer")) {
+                intentFromMainActivity = new Intent(MainActivity.this, CustomerLoggedIn.class);
+            } else {
+                intentFromMainActivity = new Intent(MainActivity.this, SellerLoggedIn.class);
+            }
+            startActivity(intentFromMainActivity);
+            currentUser = mAuth.getCurrentUser();
+        }
     }
 
     @Override
@@ -55,6 +77,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         editTextEmail = findViewById(R.id.editTextPhone);
         editTextPassword = findViewById(R.id.editTextPassword);
+
+        // Initializing SharedPreferences
+        pref = getApplicationContext().getSharedPreferences("MyPref", MODE_PRIVATE);
+        editor = pref.edit();
 
         mAuth = FirebaseAuth.getInstance();
         alertBuilderMainActivity = new AlertDialog.Builder(MainActivity.this);
@@ -114,6 +140,12 @@ public class MainActivity extends AppCompatActivity {
                     for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                         CURRENT_USER_ID = documentSnapshot.getId();
                         CURRENT_USER_ROLE = documentSnapshot.getString("userRole");
+
+                        // Writing SharedPreferences
+                        editor.putString("CURRENT_USER_ID", CURRENT_USER_ID);
+                        editor.putString("CURRENT_USER_ROLE", CURRENT_USER_ROLE);
+                        editor.commit();
+
                         Log.wtf("CURRENT_USER_ID", CURRENT_USER_ID);
                         Log.wtf("CURRENT_USER_ROLE", CURRENT_USER_ROLE);
 
