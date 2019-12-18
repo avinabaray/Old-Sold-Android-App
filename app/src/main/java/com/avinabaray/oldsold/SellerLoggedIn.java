@@ -19,6 +19,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -143,54 +144,109 @@ public class SellerLoggedIn extends BaseActivity implements AdapterView.OnItemSe
         if(filePath != null)
         {
             final ProgressDialog progressDialog = new ProgressDialog(this);
-            progressDialog.setTitle("Uploading...");
+            progressDialog.setMessage("Uploading...");
             progressDialog.setCanceledOnTouchOutside(false);
             progressDialog.show();
 
-            StorageReference ref = storageReference.child("item_images/"+ itemPhotoName);
-            ref.putFile(filePath).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            final StorageReference ref = storageReference.child("item_images/"+ itemPhotoName);
+            UploadTask uploadTask = ref.putFile(filePath);
+
+            Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
                 @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                    if (!task.isSuccessful()) {
+                        throw task.getException();
+                    }
 
-                    filePath = null;
-                    imageViewSelectedImg.setImageResource(0);
+                    // Continue with the task to get the download URL
+                    return ref.getDownloadUrl();
+                }
+            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                @Override
+                public void onComplete(@NonNull Task<Uri> task) {
+                    if (task.isSuccessful()) {
+                        Uri downloadUri = task.getResult();
+                        Log.wtf("URL", downloadUri.toString());
+                        itemPhotoName = downloadUri.toString();
 
-                    // Data to be pushed to Firestore
-                    Map<String, Object> itemDetails = new HashMap<String, Object>();
-                    itemDetails.put(SELLER_ID, MainActivity.CURRENT_USER_ID);
-                    itemDetails.put(I_CATEGORY, itemCatg);
-                    itemDetails.put(I_TITLE, itemTitle);
-                    itemDetails.put(I_IMAGE, itemPhotoName);
-                    itemDetails.put(I_DESC, itemDesc);
+                        filePath = null;
+                        imageViewSelectedImg.setImageResource(0);
 
-                    mDocRef.add(itemDetails).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
-                        @Override
-                        public void onComplete(@NonNull Task<DocumentReference> task) {
-                            progressDialog.dismiss();
-                            if (task.isSuccessful()) {
-                                editTextItemTitle.setText("");
-                                editTextItemDesc.setText("");
-                                commonMethods.createAlert(alertBuilder, "Item uploaded successfully!");
-                            } else {
-                                String errorMsg = task.getException().getMessage() + " Try Again...";
-                                commonMethods.createAlert(alertBuilder, errorMsg);
+                        // Data to be pushed to Firestore
+                        Map<String, Object> itemDetails = new HashMap<String, Object>();
+                        itemDetails.put(SELLER_ID, MainActivity.CURRENT_USER_ID);
+                        itemDetails.put(I_CATEGORY, itemCatg);
+                        itemDetails.put(I_TITLE, itemTitle);
+                        itemDetails.put(I_IMAGE, itemPhotoName);
+                        itemDetails.put(I_DESC, itemDesc);
+
+                        mDocRef.add(itemDetails).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentReference> task) {
+                                progressDialog.dismiss();
+                                if (task.isSuccessful()) {
+                                    editTextItemTitle.setText("");
+                                    editTextItemDesc.setText("");
+                                    commonMethods.createAlert(alertBuilder, "Item uploaded successfully!");
+                                } else {
+                                    String errorMsg = task.getException().getMessage() + " Try Again...";
+                                    commonMethods.createAlert(alertBuilder, errorMsg);
+                                }
                             }
-                        }
-                    });
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    progressDialog.dismiss();
-                    commonMethods.createAlert(alertBuilder, "Failed " + e.getMessage());
-                }
-            }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onProgress(@NonNull UploadTask.TaskSnapshot taskSnapshot) {
-                    double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
-                    progressDialog.setMessage("Uploaded " + (int)progress + "%");
+                        });
+
+
+                    } else {
+                        // Handle failures
+                        commonMethods.createAlert(alertBuilder, "Failed " + task.getException().getMessage());
+                    }
                 }
             });
+
+//            uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+//                @Override
+//                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+//
+//                    filePath = null;
+//                    imageViewSelectedImg.setImageResource(0);
+//
+//                    // Data to be pushed to Firestore
+//                    Map<String, Object> itemDetails = new HashMap<String, Object>();
+//                    itemDetails.put(SELLER_ID, MainActivity.CURRENT_USER_ID);
+//                    itemDetails.put(I_CATEGORY, itemCatg);
+//                    itemDetails.put(I_TITLE, itemTitle);
+//                    itemDetails.put(I_IMAGE, itemPhotoName);
+//                    itemDetails.put(I_DESC, itemDesc);
+//
+//                    mDocRef.add(itemDetails).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+//                        @Override
+//                        public void onComplete(@NonNull Task<DocumentReference> task) {
+//                            progressDialog.dismiss();
+//                            if (task.isSuccessful()) {
+//                                editTextItemTitle.setText("");
+//                                editTextItemDesc.setText("");
+//                                commonMethods.createAlert(alertBuilder, "Item uploaded successfully!");
+//                            } else {
+//                                String errorMsg = task.getException().getMessage() + " Try Again...";
+//                                commonMethods.createAlert(alertBuilder, errorMsg);
+//                            }
+//                        }
+//                    });
+//                }
+//            }).addOnFailureListener(new OnFailureListener() {
+//                @Override
+//                public void onFailure(@NonNull Exception e) {
+//                    progressDialog.dismiss();
+//                    commonMethods.createAlert(alertBuilder, "Failed " + e.getMessage());
+//                }
+//            }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+//                @Override
+//                public void onProgress(@NonNull UploadTask.TaskSnapshot taskSnapshot) {
+//                    double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
+//                    progressDialog.setMessage("Uploaded " + (int)progress + "%");
+//                }
+//            });
+
         } else {
             commonMethods.createAlert(alertBuilder, "Please select a photo to upload the item");
         }

@@ -14,12 +14,13 @@
 
         <ImageView
             android:id="@+id/imageViewItemPhoto"
-            android:layout_width="200dp"
+            android:layout_width="175dp"
             android:layout_height="match_parent" />
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:padding="5dp"
             android:orientation="vertical">
 
             <TextView
