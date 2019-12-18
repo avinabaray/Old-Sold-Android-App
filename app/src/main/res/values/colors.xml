@@ -2,7 +2,8 @@
 <resources>
     <color name="colorPrimary">#6624E4</color>
     <color name="colorPrimaryDark">#4B27A5</color>
-    <color name="colorAccent">#D81B60</color>
+    <color name="colorAccent">#DF2B6C</color>
     <color name="sellerSelector">#7332E6</color>
     <color name="customerSelector">#7332E6</color>
+    <color name="customer_text">#6D6D6D</color>
 </resources>

@@ -120,6 +120,11 @@ public class SellerLoggedIn extends BaseActivity implements AdapterView.OnItemSe
         }
     }
 
+    public void viewMyItems(View view) {
+        Intent intent = new Intent(this, SellerItemsActivity.class);
+        startActivity(intent);
+    }
+
     public void selectPhoto(View view) {
         Intent intent = new Intent();
         intent.setType("image/*");

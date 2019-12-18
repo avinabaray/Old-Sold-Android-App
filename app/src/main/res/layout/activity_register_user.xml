@@ -38,7 +38,7 @@
             android:paddingEnd="10dp"
             android:text="Customer"
             android:textAlignment="textEnd"
-            android:textColor="@color/customerSelector"
+            android:textColor="@color/customer_text"
             android:textStyle="bold" />
 
         <Switch
@@ -58,7 +58,7 @@
             android:paddingStart="10dp"
             android:text="Seller"
             android:textAlignment="textStart"
-            android:textColor="@color/sellerSelector"
+            android:textColor="@color/colorAccent"
             android:textStyle="bold" />
     </LinearLayout>
 
