@@ -28,6 +28,7 @@ public class SellerItemsActivity extends BaseActivity {
     RecyclerView recyclerViewItems;
     TextView textViewNoItem;
     RecyclerViewAdapterItems adapter;
+    CommonMethods commonMethods;
 
     private ArrayList<String> itemPhotos = new ArrayList<>();
     private ArrayList<String> itemCatgs = new ArrayList<>();
@@ -42,6 +43,9 @@ public class SellerItemsActivity extends BaseActivity {
         setContentView(R.layout.activity_seller_items);
         recyclerViewItems = findViewById(R.id.recyclerViewItems);
         textViewNoItem = findViewById(R.id.textViewNoItem);
+        commonMethods = new CommonMethods();
+
+        commonMethods.loadingDialogStart(this);
 
         initDataArrays();
     }
@@ -76,6 +80,7 @@ public class SellerItemsActivity extends BaseActivity {
 
     private void initRecyclerView() {
         Log.d(TAG, "initRecyclerView: init recyclerview");
+        commonMethods.loadingDialogStop();
 
         adapter = new RecyclerViewAdapterItems(this, itemPhotos, itemCatgs, itemTitles, itemDescs, seller_id, item_id);
         recyclerViewItems.setAdapter(adapter);

@@ -1,5 +1,6 @@
 package com.avinabaray.oldsold;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
@@ -68,6 +69,11 @@ public class RecyclerViewAdapterItems extends RecyclerView.Adapter<RecyclerViewA
     }
 
     @Override
+    public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
+        super.onAttachedToRecyclerView(recyclerView);
+    }
+
+    @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
         Log.d(TAG, "onBindViewHolder: called.");
 
@@ -103,6 +109,7 @@ public class RecyclerViewAdapterItems extends RecyclerView.Adapter<RecyclerViewA
             public void onClick(View view) {
                 Log.d(TAG, "onClick: clicked on: " + itemTitles.get(position));
                 String commentMsg = holder.editTextAddComment.getText().toString();
+                holder.editTextAddComment.setText("");
 
                 if (commentMsg.isEmpty()) {
                     Toast.makeText(mContext, "Write a comment first", Toast.LENGTH_SHORT).show();
@@ -120,7 +127,6 @@ public class RecyclerViewAdapterItems extends RecyclerView.Adapter<RecyclerViewA
                             if (task.isSuccessful()) {
                                 Log.d("STATUS", "Comment saved successfully");
                                 Toast.makeText(mContext, "Comment added successfully", Toast.LENGTH_SHORT).show();
-                                holder.editTextAddComment.setText("");
                             } else {
                                 Log.d("STATUS", task.getException().getMessage());
                                 Toast.makeText(mContext, "Oops... Something went wrong", Toast.LENGTH_SHORT).show();
