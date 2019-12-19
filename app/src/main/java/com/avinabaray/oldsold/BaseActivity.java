@@ -26,9 +26,6 @@ public class BaseActivity extends AppCompatActivity {
                 break;
 
             case R.id.itemLogout:
-
-//                Toast.makeText(this, pref.getString("CURRENT_USER_ROLE",""), Toast.LENGTH_SHORT).show();
-
                 MainActivity.CURRENT_USER_EMAIL = null;
                 MainActivity.CURRENT_USER_ID = null;
                 MainActivity.CURRENT_USER_ROLE = null;

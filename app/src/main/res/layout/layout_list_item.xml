@@ -96,7 +96,11 @@
         <TextView
             android:id="@+id/textViewShowComment"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:textColor="@color/colorPrimary"
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
         <RelativeLayout
             android:layout_width="match_parent"

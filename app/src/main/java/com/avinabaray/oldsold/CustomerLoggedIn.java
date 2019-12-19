@@ -81,20 +81,6 @@ public class CustomerLoggedIn extends BaseActivity {
                 Toast.makeText(CustomerLoggedIn.this, "Something went wrong", Toast.LENGTH_SHORT).show();
             }
         });
-
-//        mDocRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
-//            @Override
-//            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-//                for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
-//                    itemPhotos.add(documentSnapshot.getString("i_image"));
-//                    itemCatgs.add(documentSnapshot.getString("i_category"));
-//                    itemTitles.add(documentSnapshot.getString("i_title"));
-//                    itemDescs.add(documentSnapshot.getString("i_desc"));
-//                }
-//                initRecyclerView();
-//            }
-//        });
-
     }
 
     public void refresh(View view) {

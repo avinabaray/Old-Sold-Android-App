@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -20,7 +21,12 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,7 +38,8 @@ public class RecyclerViewAdapterItems extends RecyclerView.Adapter<RecyclerViewA
     public static final String USER_ID = "user_id";
     public static final String USER_ROLE = "user_role";
     public static final String COMMENT_MSG = "comment_msg";
-    private CollectionReference mDocRef;
+    private CollectionReference mDocRefToAddComment;
+    private DocumentReference mDocRefToShowComment;
     private Context mContext;
 
     private ArrayList<String> itemPhotos = new ArrayList<>();
@@ -72,31 +79,48 @@ public class RecyclerViewAdapterItems extends RecyclerView.Adapter<RecyclerViewA
         holder.textViewItemTitle.setText(itemTitles.get(position));
         holder.textViewItemDesc.setText(itemDescs.get(position));
 
+        mDocRefToShowComment = FirebaseFirestore.getInstance().collection("items").document(item_id.get(position));
+
+        mDocRefToShowComment.collection("comments").addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                // Comments present for this item
+                StringBuilder commentsToShow = new StringBuilder();
+                if (!queryDocumentSnapshots.isEmpty()) {
+                    for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                        commentsToShow.append("\n").append(documentSnapshot.getString("user_role")).append(": ").append(documentSnapshot.getString("comment_msg"));
+                    }
+                } else {
+                    commentsToShow.append("No comments yet...\nBe the first to add one.");
+                }
+                holder.textViewShowComment.setText(commentsToShow.toString());
+            }
+        });
 
         // OnClickListener to perform action on click
         holder.imageViewSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Log.d(TAG, "onClick: clicked on: " + itemTitles.get(position));
-                Toast.makeText(mContext, item_id.get(position), Toast.LENGTH_SHORT).show();
                 String commentMsg = holder.editTextAddComment.getText().toString();
 
                 if (commentMsg.isEmpty()) {
                     Toast.makeText(mContext, "Write a comment first", Toast.LENGTH_SHORT).show();
                 } else {
-                    mDocRef = FirebaseFirestore.getInstance().collection("items").document(item_id.get(position)).collection("comments");
+                    mDocRefToAddComment = FirebaseFirestore.getInstance().collection("items").document(item_id.get(position)).collection("comments");
 
                     Map<String, Object> comment = new HashMap<String, Object>();
                     comment.put(USER_ID, MainActivity.CURRENT_USER_ID);
                     comment.put(USER_ROLE, MainActivity.CURRENT_USER_ROLE);
                     comment.put(COMMENT_MSG, commentMsg);
 
-                    mDocRef.add(comment).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                    mDocRefToAddComment.add(comment).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
                         @Override
                         public void onComplete(@NonNull Task<DocumentReference> task) {
                             if (task.isSuccessful()) {
                                 Log.d("STATUS", "Comment saved successfully");
                                 Toast.makeText(mContext, "Comment added successfully", Toast.LENGTH_SHORT).show();
+                                holder.editTextAddComment.setText("");
                             } else {
                                 Log.d("STATUS", task.getException().getMessage());
                                 Toast.makeText(mContext, "Oops... Something went wrong", Toast.LENGTH_SHORT).show();
@@ -124,8 +148,7 @@ public class RecyclerViewAdapterItems extends RecyclerView.Adapter<RecyclerViewA
         TextView textViewItemDesc;
         ImageView imageViewSend;
         EditText editTextAddComment;
-
-
+        TextView textViewShowComment;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -138,6 +161,7 @@ public class RecyclerViewAdapterItems extends RecyclerView.Adapter<RecyclerViewA
             textViewItemDesc = itemView.findViewById(R.id.textViewItemDesc);
             imageViewSend = itemView.findViewById(R.id.imageViewSend);
             editTextAddComment = itemView.findViewById(R.id.editTextAddComment);
+            textViewShowComment = itemView.findViewById(R.id.textViewShowComment);
 
             textViewItemDesc.setMovementMethod(new ScrollingMovementMethod());
 
