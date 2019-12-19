@@ -33,6 +33,8 @@ public class SellerItemsActivity extends BaseActivity {
     private ArrayList<String> itemCatgs = new ArrayList<>();
     private ArrayList<String> itemTitles = new ArrayList<>();
     private ArrayList<String> itemDescs = new ArrayList<>();
+    private ArrayList<String> seller_id = new ArrayList<>();
+    private ArrayList<String> item_id = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,10 +51,12 @@ public class SellerItemsActivity extends BaseActivity {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                 for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                    item_id.add(documentSnapshot.getId());
                     itemPhotos.add(documentSnapshot.getString("i_image"));
                     itemCatgs.add(documentSnapshot.getString("i_category"));
                     itemTitles.add(documentSnapshot.getString("i_title"));
                     itemDescs.add(documentSnapshot.getString("i_desc"));
+                    seller_id.add(documentSnapshot.getString("seller_id"));
                 }
                 Log.wtf("SIZE", String.valueOf(itemTitles.size()));
                 if (itemTitles.size() == 0) {
@@ -73,7 +77,7 @@ public class SellerItemsActivity extends BaseActivity {
     private void initRecyclerView() {
         Log.d(TAG, "initRecyclerView: init recyclerview");
 
-        adapter = new RecyclerViewAdapterItems(this, itemPhotos, itemCatgs, itemTitles, itemDescs);
+        adapter = new RecyclerViewAdapterItems(this, itemPhotos, itemCatgs, itemTitles, itemDescs, seller_id, item_id);
         recyclerViewItems.setAdapter(adapter);
         recyclerViewItems.setLayoutManager(new LinearLayoutManager(this));
     }
