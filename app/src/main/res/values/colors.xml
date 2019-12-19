@@ -8,4 +8,5 @@
     <color name="customer_text">#6D6D6D</color>
     <color name="splash_bg">#1375bc</color>
     <color name="splash_bg_white">#FFFFFF</color>
+    <color name="login_register_btn">#673AB7</color>
 </resources>

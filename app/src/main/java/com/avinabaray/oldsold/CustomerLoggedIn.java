@@ -72,6 +72,7 @@ public class CustomerLoggedIn extends BaseActivity {
                     seller_id.add(documentSnapshot.getString("seller_id"));
                 }
                 Log.wtf("SIZE", String.valueOf(itemTitles.size()));
+                commonMethods.loadingDialogStop();
                 if(itemTitles.size() == 0) {
                     recyclerViewItems.setVisibility(View.GONE);
                     textViewNoItem.setVisibility(View.VISIBLE);
@@ -94,7 +95,6 @@ public class CustomerLoggedIn extends BaseActivity {
     }
     private void initRecyclerView() {
         Log.d(TAG, "initRecyclerView: init recyclerview");
-        commonMethods.loadingDialogStop();
 
         adapter = new RecyclerViewAdapterItems(this, itemPhotos, itemCatgs, itemTitles, itemDescs, seller_id, item_id);
         recyclerViewItems.setAdapter(adapter);
