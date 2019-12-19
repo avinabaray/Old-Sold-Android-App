@@ -6,4 +6,6 @@
     <color name="sellerSelector">#7332E6</color>
     <color name="customerSelector">#7332E6</color>
     <color name="customer_text">#6D6D6D</color>
+    <color name="splash_bg">#1375bc</color>
+    <color name="splash_bg_white">#FFFFFF</color>
 </resources>
