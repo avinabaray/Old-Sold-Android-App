@@ -102,9 +102,11 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
+        commonMethods.loadingDialogStart(this);
         mAuth.signInWithEmailAndPassword(stringEmail, stringPassword).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
+                commonMethods.loadingDialogStop();
                 if(task.isSuccessful()){
                     // Sign in success
                     FirebaseUser user = mAuth.getCurrentUser();
