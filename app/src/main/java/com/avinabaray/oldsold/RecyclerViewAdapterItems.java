@@ -91,7 +91,7 @@ public class RecyclerViewAdapterItems extends RecyclerView.Adapter<RecyclerViewA
                         commentsToShow.append("\n").append(documentSnapshot.getString("user_role")).append(": ").append(documentSnapshot.getString("comment_msg"));
                     }
                 } else {
-                    commentsToShow.append("No comments yet...\nBe the first to add one.");
+                    commentsToShow.append("\nNo comments yet...\nBe the first to add one.");
                 }
                 holder.textViewShowComment.setText(commentsToShow.toString());
             }
