@@ -56,3 +56,4 @@ public class BaseActivity extends AppCompatActivity {
         editor = pref.edit();
     }
 }
+// end of file
